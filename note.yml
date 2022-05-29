@@ -1,0 +1,21 @@
+cargo spent hours:
+1 + 1
+
+add submodule:
+git submodule add git@github.com:Doszhan-M/cargo.git ./cargo_app/cargo
+
+
+delete submodule:
+git rm -r cargo_app/cargo
+rm -rf .git/modules/cargo_app/cargo
+
+
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+
+python3 manage.py createsuperuser
+admin_test
+admin@cargo.com
+testadmin2022

@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+
+  postgres_cargo:
+    image: postgres:14.2
+    # restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+
+  cargo:
+    build: cargo_app/.
+    # restart: always
+    command: [ 'python3', 'manage.py', 'runserver', '0.0.0.0:8000']
+    # entrypoint: [ 'sh', "./run_app.sh" ]
+    volumes:
+      - ./cargo_app/cargo:/home/cargo/
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_cargo
+
+  redis_cargo:
+    image: redis:7.0-rc3
+    # restart: always
+    volumes:
+      - ./redis_data/redis/data:/data
+    logging:
+      driver: "none"
+    ports:
+      - 6379:6379
+
+  pgadmin_cargo:
+    image: dpage/pgadmin4:5.1
+    # restart: always
+    env_file:
+      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - pgadmin_cargo:/var/lib/pgadmin
+    logging:
+      driver: "none"
+    ports:
+      - "5050:80"
+
+#   flower_cargo:
+#     image: mher/flower
+#     # restart: always
+#     environment:
+#       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+#       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+#       TZ: "Asia/Almaty"
+#     ports:
+#       - 5555:5555
+#     depends_on:
+#       - redis_backend
+
+volumes:
+  pgadmin_cargo:    
