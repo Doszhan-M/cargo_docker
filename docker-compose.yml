@@ -4,7 +4,7 @@ services:
 
   postgres_cargo:
     image: postgres:14.2
-    # restart: always
+    restart: on-failure:10
     env_file:
       - .env
     environment:
@@ -16,9 +16,8 @@ services:
 
   cargo:
     build: cargo_app/.
-    # restart: always
-    command: [ 'python3', 'manage.py', 'runserver', '0.0.0.0:8000']
-    # entrypoint: [ 'sh', "./run_app.sh" ]
+    restart: on-failure:10
+    command: [ 'python3', 'manage.py', 'runserver', '0.0.0.0:8000' ]
     volumes:
       - ./cargo_app/cargo:/home/cargo/
     env_file:
@@ -30,7 +29,7 @@ services:
 
   redis_cargo:
     image: redis:7.0-rc3
-    # restart: always
+    restart: on-failure:10
     volumes:
       - ./redis_data/redis/data:/data
     logging:
@@ -40,7 +39,7 @@ services:
 
   pgadmin_cargo:
     image: dpage/pgadmin4:5.1
-    # restart: always
+    restart: on-failure:10
     env_file:
       - .env
     environment:
@@ -55,7 +54,7 @@ services:
 
 #   flower_cargo:
 #     image: mher/flower
-#     # restart: always
+#     # restart: on-failure:10
 #     environment:
 #       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
 #       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
@@ -66,4 +65,4 @@ services:
 #       - redis_backend
 
 volumes:
-  pgadmin_cargo:    
+  pgadmin_cargo:
