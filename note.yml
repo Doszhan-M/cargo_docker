@@ -1,5 +1,5 @@
 cargo spent hours:
-1 + 1
+1 + 1 + 2
 
 add submodule:
 git submodule add git@github.com:Doszhan-M/cargo.git ./cargo_app/cargo
