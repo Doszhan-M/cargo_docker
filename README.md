@@ -21,6 +21,7 @@ git submodule update --init --recursive
 cp ./local_example.py ./cargo_app/cargo/transport_reports/settings/local.py
 2 раза:
 docker-compose up --build
+
 docker exec -it cargo_docker_cargo_1 bash 
 python3 manage.py migrate
 python3 manage.py createsuperuser

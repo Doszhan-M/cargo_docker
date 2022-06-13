@@ -13,6 +13,16 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $POSTGRES_USER  -d $POSTGRES_DBNAME "
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   cargo:
     build: cargo_app/.
@@ -24,8 +34,11 @@ services:
       - .env
     ports:
       - "8000:8000"
-    depends_on:
-      - postgres_cargo
+    # depends_on:
+    #   - postgres_cargo
+    # depends_on:
+    #   postgres_cargo:
+    #     condition: service_healthy
 
   redis_cargo:
     image: redis:7.0-rc3
