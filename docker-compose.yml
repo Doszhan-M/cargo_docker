@@ -40,7 +40,7 @@ services:
 
   cargo_celery:
     build: cargo_app/.
-    restart: on-failure:10
+    restart: on-failure:3
     command: [ 'python3', 'manage.py', 'celeryd' ]
     volumes:
       - ./cargo_app/cargo:/home/cargo/
@@ -52,7 +52,7 @@ services:
 
   cargo_notifier:
     build: cargo_app/.
-    restart: on-failure:10
+    restart: on-failure:3
     command: [ 'python3', 'exports_notifier.py' ]
     volumes:
       - ./cargo_app/cargo:/home/cargo/
@@ -87,18 +87,6 @@ services:
       driver: "none"
     ports:
       - "5050:80"
-
-  # flower_cargo:
-  #   image: mher/flower
-  #   restart: on-failure:10
-  #   environment:
-  #     CELERY_BROKER_URL: redis://redis_cargo:6379/0
-  #     CELERY_RESULT_BACKEND: redis://redis_cargo:6379/0
-  #     TZ: "Asia/Almaty"
-  #   ports:
-  #     - 5555:5555
-  #   depends_on:
-  #     - redis_cargo
 
 volumes:
   pgadmin_cargo:
